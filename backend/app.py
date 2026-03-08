@@ -17,12 +17,14 @@ app = FastAPI(title="Cyber Risk Assessment API", version="1.0.0")
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # safer than "*"
+    allow_origins=[
+        "http://localhost:3000",
+        "https://cyber-risk.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Initialize components
 data_collector = DataCollector()
 risk_engine = RiskEngine()
