@@ -7,7 +7,7 @@ import Recommendations from './components/Recommendations';
 import RiskTrendChart from './components/RiskTrendChart';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://cyber-risk-backend.onrender.com/';
+const API_BASE_URL = 'https://cyber-risk-backend.onrender.com';
 
 function App() {
   const [currentView, setCurrentView] = useState('dashboard');
