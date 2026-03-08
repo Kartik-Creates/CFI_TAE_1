@@ -21,8 +21,13 @@ function App() {
     setError(null);
     
     try {
-      const response = await axios.post(`${API_BASE_URL}/scan?system_id=host-01`);
-      setAssessmentData(response.data);
+      const response = await axios.post(
+        "https://cyber-risk-backend.onrender.com/api/scan",
+        {},
+        {
+            params: { system_id: "host-01" }
+        }
+    );
       
       // Fetch updated history
       const historyResponse = await axios.get(`${API_BASE_URL}/history/host-01?limit=10`);
