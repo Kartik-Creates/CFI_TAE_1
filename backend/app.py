@@ -4,13 +4,13 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 import uvicorn
 
-from database import get_db, init_db
-from models import SystemAssessment, RiskResult, Alert
-from data_collector import DataCollector
-from risk_engine import RiskEngine
-from ml_model import MLThreatDetector
-from alert_system import AlertSystem
-import schemas
+from backend.database import get_db, init_db
+from backend.models import SystemAssessment, RiskResult, Alert, User
+from backend.data_collector import DataCollector
+from backend.risk_engine import RiskEngine
+from backend.ml_model import MLThreatDetector
+from backend.alert_system import AlertSystem
+from backend import schemas
 
 app = FastAPI(title="Cyber Risk Assessment API", version="1.0.0")
 
