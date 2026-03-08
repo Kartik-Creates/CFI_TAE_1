@@ -9,7 +9,11 @@ import os
 
 class DataCollector:
     def __init__(self):
-        self.nm = nmap.PortScanner()
+        try:
+            import nmap
+            self.nm = nmap.PortScanner()
+        except:
+            self.nm = None
         
     def scan_network(self, target="127.0.0.1"):
         """Scan network for open ports and services"""
