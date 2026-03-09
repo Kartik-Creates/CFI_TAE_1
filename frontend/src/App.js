@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import Dashboard from './components/Dashboard';
-import SystemScanner from './components/SystemScanner';
-import RiskScoreCard from './components/RiskScoreCard';
-import ThreatIndicators from './components/ThreatIndicators';
-import Recommendations from './components/Recommendations';
-import RiskTrendChart from './components/RiskTrendChart';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import Dashboard from "./components/Dashboard";
+import SystemScanner from "./components/SystemScanner";
+import RiskTrendChart from "./components/RiskTrendChart";
+import axios from "axios";
 
-const API_BASE_URL = 'https://cyber-risk-backend.onrender.com/api';
+/*
+  API URL comes from Vercel environment variable.
+  Fallback keeps local development working.
+*/
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
 function App() {
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState("dashboard");
   const [assessmentData, setAssessmentData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,30 +21,29 @@ function App() {
   const performScan = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const response = await axios.get(
-        "https://cyber-risk-backend.onrender.com/api/scan",
-        {},
-        {
-            params: { system_id: "host-01" }
-        }
-    );
-      
-      // Fetch updated history
-      const historyResponse = await axios.get(`${API_BASE_URL}/history/host-01?limit=10`);
-      setHistory(historyResponse.data);
-      
+      const response = await axios.get(`${API_BASE_URL}/scan`, {
+        params: { system_id: "host-01" },
+      });
+
+      setAssessmentData(response.data);
+
+      const historyResponse = await axios.get(
+        `${API_BASE_URL}/history/host-01`,
+        { params: { limit: 10 } }
+      );
+
+      setHistory(historyResponse.data.history || []);
     } catch (err) {
-      setError('Failed to perform security scan');
-      console.error(err);
+      console.error("Scan failed:", err);
+      setError("Failed to perform security scan");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Load initial data
     performScan();
   }, []);
 
@@ -50,35 +51,48 @@ function App() {
     <div className="app">
       <nav className="sidebar">
         <div className="logo">
-          <h1>CyberRisk<span>Pro</span></h1>
+          <h1>
+            CyberRisk<span>Pro</span>
+          </h1>
         </div>
+
         <ul className="nav-menu">
-          <li className={currentView === 'dashboard' ? 'active' : ''} 
-              onClick={() => setCurrentView('dashboard')}>
-            <i className="icon-dashboard"></i>
+          <li
+            className={currentView === "dashboard" ? "active" : ""}
+            onClick={() => setCurrentView("dashboard")}
+          >
             <span>Dashboard</span>
           </li>
-          <li className={currentView === 'scanner' ? 'active' : ''} 
-              onClick={() => setCurrentView('scanner')}>
-            <i className="icon-scan"></i>
+
+          <li
+            className={currentView === "scanner" ? "active" : ""}
+            onClick={() => setCurrentView("scanner")}
+          >
             <span>System Scanner</span>
           </li>
-          <li className={currentView === 'reports' ? 'active' : ''} 
-              onClick={() => setCurrentView('reports')}>
-            <i className="icon-reports"></i>
+
+          <li
+            className={currentView === "reports" ? "active" : ""}
+            onClick={() => setCurrentView("reports")}
+          >
             <span>Reports</span>
           </li>
-          <li className={currentView === 'alerts' ? 'active' : ''} 
-              onClick={() => setCurrentView('alerts')}>
-            <i className="icon-alerts"></i>
+
+          <li
+            className={currentView === "alerts" ? "active" : ""}
+            onClick={() => setCurrentView("alerts")}
+          >
             <span>Alerts</span>
           </li>
-          <li className={currentView === 'settings' ? 'active' : ''} 
-              onClick={() => setCurrentView('settings')}>
-            <i className="icon-settings"></i>
+
+          <li
+            className={currentView === "settings" ? "active" : ""}
+            onClick={() => setCurrentView("settings")}
+          >
             <span>Settings</span>
           </li>
         </ul>
+
         <div className="system-status">
           <div className="status-indicator online"></div>
           <span>System Online</span>
@@ -86,30 +100,30 @@ function App() {
       </nav>
 
       <main className="main-content">
-        {currentView === 'dashboard' && (
-          <Dashboard 
+        {currentView === "dashboard" && (
+          <Dashboard
             assessmentData={assessmentData}
             history={history}
             onScan={performScan}
             loading={loading}
           />
         )}
-        
-        {currentView === 'scanner' && (
-          <SystemScanner 
+
+        {currentView === "scanner" && (
+          <SystemScanner
             onScan={performScan}
             loading={loading}
             scanResult={assessmentData}
           />
         )}
-        
-        {currentView === 'reports' && (
+
+        {currentView === "reports" && (
           <div className="reports-view">
             <h2>Security Reports</h2>
             <RiskTrendChart data={history} />
           </div>
         )}
-        
+
         {error && (
           <div className="error-alert">
             <span>{error}</span>
