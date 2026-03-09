@@ -23,22 +23,21 @@ app = FastAPI(title="Cyber Risk Assessment API", version="1.0.0")
 # CORS CONFIGURATION (IMPORTANT FOR PRODUCTION)
 # ===============================
 
-# Get frontend URL from environment or use defaults
-FRONTEND_URLS = [
-    "http://localhost:3000",  # Local development
-    "https://cyber-risk.vercel.app",  # Update with your actual Vercel URL
-]
+allowed_origins = os.getenv("ALLOWED_ORIGINS")
 
-# Add from environment if available
-VERCEL_URL = os.getenv("VERCEL_URL")
-if VERCEL_URL:
-    FRONTEND_URLS.append(f"https://{VERCEL_URL}")
+if allowed_origins:
+    origins = allowed_origins.split(",")
+else:
+    origins = [
+        "http://localhost:3000",
+        "https://cyber-risk.vercel.app",
+    ]
 
-print(f"✅ Allowed CORS origins: {FRONTEND_URLS}")
+print(f"✅ Allowed CORS origins: {origins}")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=FRONTEND_URLS,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
