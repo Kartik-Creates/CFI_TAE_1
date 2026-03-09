@@ -169,14 +169,13 @@ async def perform_scan(
         )
         db.add(db_assessment)
         db.flush()
-
-        db_risk_result = RiskResult(
-            assessment_id=db_assessment.id,
-            risk_score=risk_result["risk_score"],
-            threat_level=risk_result["threat_level"],
-            ml_prediction=ml_prediction.get("threat_probability", 0),
-            attack_probability=ml_prediction.get("threat_probability", 0),
-            assessment_date=datetime.utcnow()
+    db_risk_result = RiskResult(
+        assessment_id=db_assessment.id,
+        risk_score=risk_result["risk_score"],
+        threat_level=risk_result["threat_level"],
+        ml_prediction=ml_prediction.get("threat_probability", 0),
+        attack_probability=ml_prediction.get("threat_probability", 0)
+    )
         )
         db.add(db_risk_result)
 
