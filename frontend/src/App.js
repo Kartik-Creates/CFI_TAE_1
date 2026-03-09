@@ -153,6 +153,9 @@ function App() {
           </div>
         )}
       </main>
+        <footer className="app-footer">
+            Built and deployed by <strong>Kartik Tamhan</strong> and <strong>Harsh Buwade</strong>
+        </footer>
     </div>
   );
 }
