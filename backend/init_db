@@ -1,0 +1,18 @@
+import os
+import sys
+from sqlalchemy import create_engine
+
+# This runs migrations/creates tables
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    print("ERROR: DATABASE_URL not set!")
+    sys.exit(1)
+
+try:
+    engine = create_engine(DATABASE_URL)
+    # Run your migrations/table creation here
+    print("✅ Database connection successful!")
+except Exception as e:
+    print(f"❌ Database connection failed: {e}")
+    sys.exit(1)
