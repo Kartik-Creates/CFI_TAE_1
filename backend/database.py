@@ -1,25 +1,39 @@
-# backend/database.py
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
+from dotenv import load_dotenv
 
-# Use SQLite for development (easier for Windows)
-SQLALCHEMY_DATABASE_URL = "sqlite:///./cyber_risk.db"
+load_dotenv()
 
-# Create engine
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, 
-    connect_args={"check_same_thread": False}  # Needed for SQLite
+# ✅ USE ENVIRONMENT VARIABLE FOR DATABASE URL
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "sqlite:///./cyber_risk.db"  # Fallback for local development
 )
 
-# Create SessionLocal class
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+print(f"📦 Using database: {DATABASE_URL.split('@')[1] if '@' in DATABASE_URL else 'SQLite'}")
 
-# Create Base class
+# Create engine with appropriate settings
+if "postgresql" in DATABASE_URL:
+    # PostgreSQL settings
+    engine = create_engine(
+        DATABASE_URL,
+        pool_size=10,
+        max_overflow=20,
+        pool_pre_ping=True,  # Verify connections before using them
+        pool_recycle=3600
+    )
+else:
+    # SQLite settings for development
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# Dependency to get DB session
 def get_db():
     """Get database session"""
     db = SessionLocal()
@@ -30,10 +44,9 @@ def get_db():
 
 def init_db():
     """Initialize database tables"""
-    # Import models here to avoid circular imports
     from models import Base
     Base.metadata.create_all(bind=engine)
-    print("✅ Database tables created successfully!")
+    print("✅ Database tables created/verified successfully!")
 
 def get_engine():
     """Get database engine"""
