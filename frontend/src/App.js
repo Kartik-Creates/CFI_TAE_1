@@ -21,7 +21,7 @@ function App() {
     setError(null);
     
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         "https://cyber-risk-backend.onrender.com/api/scan",
         {},
         {
