@@ -55,8 +55,11 @@ function App() {
     performScan();
   }, []);
 
-  return (
-    <div className="app">
+ return (
+  <div className="app">
+
+    <div className="layout">
+
       <nav className="sidebar">
         <div className="logo">
           <h1>
@@ -153,11 +156,12 @@ function App() {
           </div>
         )}
       </main>
-        <footer className="app-footer">
-            Built and deployed by <strong>Kartik Tamhan</strong> and <strong>Harsh Buwade</strong>
-        </footer>
-    </div>
-  );
-}
 
-export default App;
+    </div>
+
+    <footer className="app-footer">
+      Built and deployed by <strong>Kartik Tamhan</strong> and <strong>Harsh Buwade</strong>
+    </footer>
+
+  </div>
+);
